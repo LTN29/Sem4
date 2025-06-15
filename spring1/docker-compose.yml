@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0.36-debian # tên image của MySQL
+    container_name: mysql # tên container
+    cap_add: #
+      - SYS_NICE
+    restart: always
+    environment:
+      MYSQL_DATABASE: testdb # Tên cơ sở dữ liệu sẽ được tạo
+      MYSQL_ROOT_PASSWORD: root # Đăng nhập với tài khoản root và mật khẩu root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./initdb.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default
+
+  backend-service:
+    container_name: backend-service # tên container của container là backend-service
+    # Đóng gói Source code hiện tại theo mô tả của Dockerfile
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # Khi đóng gói xong sẽ chạy ở port 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+
+networks:
+  default:
+    name: backend-service # tên mạng của container
+
+volumes:
+  mysql_data:

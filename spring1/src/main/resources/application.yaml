@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backend service
+  profiles:
+    active: @spring.profiles.active@ # Lấy trong file pom.xml (spring.profiles.active)
